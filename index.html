@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>The Password Game Extreme</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col items-center justify-start p-4 sm:p-8 relative">
+        <button id="hint-btn" class="fixed top-5 right-5 z-40 bg-white hover:bg-slate-50 text-slate-800 font-bold px-4 py-2.5 rounded-full shadow-sm border border-slate-200 text-xs flex items-center gap-2 cursor-pointer select-none whitespace-nowrap w-auto max-w-max">
+        </button>
+        <header class="max-w-xl w-full text-center my-6">
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 mb-2">
+                The Password Game Extreme
+            </h1>
+            <p class="text-slate-500 text-xs sm:text-sm font-medium">Fulfill 20 randomized regulations to verify credentials.</p>
+
+            <div class="mt-4 flex justify-center items-center gap-2">
+                <div class="bg-white border border-slate-200 px-4 py-2 rounded-2xl shadow-sm flex items-center gap-2 font-mono text-slate-800 font-bold text-sm">
+                    <i class="fa-solid fa-stopwatch text-slate-500"></i>
+                        <span>Time: </span>
+                        <span id="timer-display" class="text-slate-900">00:00</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-xl w-full space-y-5 relative">
+            
+            <div class="bg-white rounded-3xl p-6 border-slate-200 shadow-sm relative space-y-4 glow-card">
+            <div>
+            <label for="username-input" class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                Username
+            </label>
+            <input
+            type="text"
+            id="username-input"
+            class="w-full bg-slate-50 text-slate-800 text-sm px-4 py-3 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus.ring-slate-400 transition-all font-medium"
+            placeholder="Enter username"
+            autocomplete="off"
+            />
+            </div>
+
+            <div>
+                <div class="flex justify-between items-center mb-1.5">
+                    <label for="password-input" class="block text-xs font-bold uppercase tracking-wider text-slate-400">
+                        Password
+                    </label>
+                    <div id="char-counter" class="text-xs font-mono text-slate-400 font-semibold">0 characters</div>
+                </div>
+
+                <textarea
+                id="password-input"
+                rows="3"
+                class="w-full bg-slate-50 text-slate-800 font-mono text-sm sm:text-base p-4 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400 transition-all resize-none"
+                placeholder="Type your password here..."
+                autocomplete="off"
+                spellcheck="false"
+                ></textarea>
+            </div>
+
+            <button
+            id="submit-btn"
+            class="w-full mt-2 py-3.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-2xl shadow-sm transition-all transform active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+            >
+            <span>Verify Credentials & Submit</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+            </div>
+
+            <div class="space-y-3" id="rules-container"></div>
+            <div id="popup-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300 z-50">
+                <div id="popup-card" class="bg-white rounded-3xl max-w-sm w-full p-7 shadow-2xl border border-slate-200 relative transform scale-95 transition-all duration-300">
+                    <div id="popup-content" class="space-y-4 text-center">
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="leaderboard-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300 z-50">
+                <div id="leaderboard-card" class="bg-white rounded-3xl max-w-lg w-full p-7 shadow-2xl border border-slate-200 relative transform scale-95 transition-all duration-300 space-y-5">
+                   <div class="text-center space-y-2">
+                    <div class="inline-flex items-center justify-center w-14 rounded-full bg-amber-100 text-amber-100 text-2xl shadow-inner animate-bounce">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">VICTORY UNLOCKED</h2>
+                    <p class="text-xs text-slate-500 font-medium">You survived the 20 rules of pure chaos!</p>
+                   </div> 
+
+                   <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs space-y-1 font-mono">
+                    <div class="flex justify-between"><span class="text-slate-400">User:</span><span id="summary-user" class="font-bold text-slate-800"></span></div>
+                    <div class="flex justify-between"><span class="text-slate-400">Time Taken:</span><span id="summary-time" class="font-bold text-emerald-600"></span></div>
+                    <div class="flex justify-between"><span class="text-slate-400">Password:</span><span id="summary-pass" class="font-bold text-slate-800 truncate max-w-[200px]"></span></div>
+                   </div>
+
+                    <div class="space-y-3">
+                        <h3 class="text-xs font-extrabold uppercase tracking-widest text-slate-400">Global Leaderboard</h3>
+                        <div class="overflow-x-auto max-h-48 overflow-y-auto rounded-xl border border-slate-100">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead class="sticky top-0 bg-slate-100">
+                                    <tr class="border-b border-slate-200 text-slate-500 uppercase font-bold text-[10px] tracking-wider">
+                                        <th class="py-2.5 px-3">Rank</th>
+                                        <th class="py-2.5 px-3">User</th>
+                                        <th class="py-2.5 px-3">Time</th>
+                                        <th class="py-2.5 px-3">Password</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leaderboard-body" class="divide-y divide-slate-100 font-mono text-slate-700 bg-white">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <button id="close-leaderboard-btn" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-2xl text-xs transition">
+                        Play Again   
+                    </button>
+                </div>
+            </div>
+
+            <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs sm:text-sm px-6 py-3 rounded-full border border-slate-700 shadow-lg opacity-0 transition-all duration-300 pointer-events-none z-50 flex items-center gap-2 font-semibold">
+                <i class="fa-solid fa-circle-info text-slate-300"></i>
+                <span id="toast-text">Notification message</span>
+            </div>
+        </main>
+
+        <script src="script.js"></script>
+    </body>
+</html>
